@@ -1,10 +1,38 @@
+# prometheus-speedtest-exporter-grafana-docker
+
+# 🚀 Containerized Speedtest CLI - Prometheus Exporter 🚀
+
+https://github.com/coding-to-music/prometheus-speedtest-exporter-grafana-docker
+
+From / By Jeff Billimek https://github.com/billimek
+
+https://github.com/billimek/prometheus-speedtest-exporter
+
+## Environment variables:
+
+```java
+
+```
+
+## GitHub
+
+```java
+git init
+git add .
+git remote remove origin
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:coding-to-music/prometheus-speedtest-exporter-grafana-docker.git
+git push -u origin main
+```
+
 # Speedtest CLI Prometheus Exporter
 
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/billimek/prometheus-speedtest-exporter)](https://hub.docker.com/r/billimek/prometheus-speedtest-exporter/tags)
 
 ![](https://i.imgur.com/iIzWUre.png)
 
-This is a docker container which runs a prometheus exporter to collect speedtest data using the official [Speedtest CLI](https://www.speedtest.net/apps/cli) and [script_exporter](https://github.com/ricoberger/script_exporter).  The [billimek/prometheus-speedtest-exporter](https://hub.docker.com/repository/docker/billimek/prometheus-speedtest-exporter) docker image is multi-arch supporting amd64, arm7, and arm64.
+This is a docker container which runs a prometheus exporter to collect speedtest data using the official [Speedtest CLI](https://www.speedtest.net/apps/cli) and [script_exporter](https://github.com/ricoberger/script_exporter). The [billimek/prometheus-speedtest-exporter](https://hub.docker.com/repository/docker/billimek/prometheus-speedtest-exporter) docker image is multi-arch supporting amd64, arm7, and arm64.
 
 ## Testing the Exporter
 
@@ -57,20 +85,20 @@ Example config:
 
 ```yaml
 scrape_configs:
-  - job_name: 'speedtest'
+  - job_name: "speedtest"
     metrics_path: /probe
     params:
       script: [speedtest]
     static_configs:
       - targets:
-        - 127.0.0.1:9469
+          - 127.0.0.1:9469
     scrape_interval: 60m
     scrape_timeout: 90s
-  - job_name: 'script_exporter'
+  - job_name: "script_exporter"
     metrics_path: /metrics
     static_configs:
       - targets:
-        - 127.0.0.1:9469
+          - 127.0.0.1:9469
 ```
 
 ## helm chart
@@ -83,19 +111,19 @@ Included is an [example grafana dashboard](speedtest-exporter.json) as shown in 
 
 ## Speed Testing Against Multiple Target Servers
 
-By default speedtest will automatically choose a server close to you.  You may override this choice and specify one or more Speedtest servers to test against by setting the `server_ids` environment variable.  For example in Docker Compose:
+By default speedtest will automatically choose a server close to you. You may override this choice and specify one or more Speedtest servers to test against by setting the `server_ids` environment variable. For example in Docker Compose:
 
 ```yaml
-  speedtest:
-    image: "billimek/prometheus-speedtest-exporter:latest"
-    restart: "on-failure"
-    ports:
-      - 9469:9469
-    environment:
-      - server_ids=3855,1782,2225 # 3855 => DTAC Bangkok; 1782 => Comcast Seattle; 2225 => Telstra Melbourne
+speedtest:
+  image: "billimek/prometheus-speedtest-exporter:latest"
+  restart: "on-failure"
+  ports:
+    - 9469:9469
+  environment:
+    - server_ids=3855,1782,2225 # 3855 => DTAC Bangkok; 1782 => Comcast Seattle; 2225 => Telstra Melbourne
 ```
 
-The exporter will now run speedtest for each server that you specify one-by-one.  Generated metrics will also be labeled with the server ID - for example:
+The exporter will now run speedtest for each server that you specify one-by-one. Generated metrics will also be labeled with the server ID - for example:
 
 ```
 speedtest_latency_seconds{server_id="3855"} 17.363
@@ -108,21 +136,21 @@ speedtest_latency_seconds{server_id="2225"} 292.73
 As you add more servers you may need to extend the scrape_timeout for the Prometheus job so it doesn't get killed before it completes:
 
 ```yml
-  - job_name: "speedtest"
-    metrics_path: /probe
-    params:
-      script: [speedtest]
-    static_configs:
-      - targets:
+- job_name: "speedtest"
+  metrics_path: /probe
+  params:
+    script: [speedtest]
+  static_configs:
+    - targets:
         - 127.0.0.1:9469
-    scrape_interval: 60m
-    scrape_timeout: 10m
+  scrape_interval: 60m
+  scrape_timeout: 10m
 ```
 
 Use this [searchable list](https://williamyaps.github.io/wlmjavascript/servercli.html) to find server ID's.
 
 ## Inspired by
 
-* https://github.com/h2xtreme/prometheus-speedtest-exporter
-* https://github.com/ricoberger/script_exporter
-* https://github.com/pschmitt/docker-ookla-speedtest-cli
+- https://github.com/h2xtreme/prometheus-speedtest-exporter
+- https://github.com/ricoberger/script_exporter
+- https://github.com/pschmitt/docker-ookla-speedtest-cli
